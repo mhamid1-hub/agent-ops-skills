@@ -16,8 +16,9 @@ API — see each skill's `references/framework-adapters.md`.
 |---|---|
 | [`tiered-model-delegation`](skills/tiered-model-delegation/) | You're burning frontier-model tokens on mechanical execution. Plan once with a strong model, execute with a cheap one — safely, with the guardrails that stop a cheap model from silently guessing on unresolved decisions. |
 | [`merge-reconciler`](skills/merge-reconciler/) | Two AI agents produced conflicting branches and neither should resolve its own conflict (they're structurally biased toward their own diff). A neutral third-party procedure + script to classify and resolve every hunk. |
+| [`task-scoped-watchdog`](skills/task-scoped-watchdog/) | A monitoring cron for one background build/dispatch gets left running forever, burning cycles on checks with nothing to watch. A lifecycle gate (script + scheduler adapters) that scopes the watchdog's active window to the target's actual lifetime, with a TTL so a forgotten deactivation self-expires. |
 
-## Why these two
+## Why these three
 
 Most "agent skill" repos are wrappers around a library's own docs (turn
 python-pptx into a skill, turn `gh` into a skill). These aren't that — they
@@ -33,6 +34,12 @@ encode judgment calls that cost real money or real bugs to learn:
   the peer's context and are biased toward their own side. This is the
   neutral-arbiter pattern that fixes it, plus a script that extracts and
   classifies every conflicted hunk instead of eyeballing diff markers.
+- **Task-scoped watchdog**: the failure mode isn't "how do I poll a
+  background task," it's that polling defaults to always-on and keeps
+  running after the thing it watches is done. The skill is a lifecycle gate
+  — activate at dispatch, deactivate on resolution, TTL as a self-expiring
+  safety net — plus the exact pause/resume call for five different
+  scheduler primitives.
 
 ## Install
 
